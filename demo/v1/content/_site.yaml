@@ -1,0 +1,4 @@
+site_domain: "localhost"
+site_port: 10081
+publishing_path: "/_/content/"
+use_ssl: false
