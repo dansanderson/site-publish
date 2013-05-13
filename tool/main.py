@@ -34,15 +34,15 @@ def main(args):
     """
     if not args or (args[0] != 'help' and args[0] not in COMMANDS):
         sys.stderr.write(
-            'Usage:  callisto <command> [args]\n\n'
-            'For help:  callisto help\n')
+            'Usage:  sp <command> [args]\n\n'
+            'For help:  sp help\n')
         return 1
 
     if args[0] == 'help':
         if len(args) == 1:
             # List the available commands with short descriptions.
             sys.stdout.write(
-                'Usage:  callisto <command> [args]\n\n'
+                'Usage:  sp <command> [args]\n\n'
                 'Available commands:\n')
             for cmd_name in COMMANDS:
                 cmd_class = get_command_class(cmd_name)
