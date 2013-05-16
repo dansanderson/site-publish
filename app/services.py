@@ -1,3 +1,4 @@
+import logging
 from google.appengine.ext import endpoints
 from protorpc import messages
 from protorpc import remote
@@ -38,7 +39,7 @@ class AbortRequest(messages.Message):
     change_id = messages.IntegerField(1, required=True)
 
 
-def ValidateUserDomain():
+def ValidateUserIsAuthorized():
     """Raises endpoints.UnauthorizedException if the caller is not signed in
     or is not allowed to publish content.
     """
@@ -51,7 +52,6 @@ def ValidateUserDomain():
     name='sitepublish',
     version='v1',
     description='Site Publish API',
-    hostname='site-publish.appspot.com',
     allowed_client_ids=CLIENT_IDS)
 class SitePublishApi(remote.Service):
 
@@ -60,7 +60,7 @@ class SitePublishApi(remote.Service):
         StartResponse,
         name='start', path='start')
     def start(self, request):
-        ValidateUserDomain()
+        ValidateUserIsAuthorized()
         change = publish.start_change(
             request.project_prefixes,
             request.upload_paths,
@@ -73,16 +73,23 @@ class SitePublishApi(remote.Service):
         GenericResponse,
         name='upload', path='upload')
     def upload(self, request):
-        ValidateUserDomain()
+        logging.error('DEBUG: GOT HERE 1')
+        ValidateUserIsAuthorized()
         change_key = models.Change.get_key(request.change_id)
         change = change_key.get()
         if change is None:
+            logging.error('Bad upload request: Invalid change ID: %r',
+                          request.change_id)
             raise endpoints.BadRequestException(
                 'Invalid change ID.')
         if request.url_path not in change.upload_paths:
+            logging.error('Bad upload request: Unexpected upload for path: %r',
+                          request.url_path)
             raise endpoints.BadRequestException(
                 'Unexpected upload for path %s.' % request.url_path)
         if len(request.data) > 900 * 1024:
+            logging.error('Bad upload request: File too large: %r',
+                          request.url_path)
             raise endpoints.BadRequestException(
                 'Uploaded data cannot exceed 900 kilobytes.')
 
@@ -92,21 +99,25 @@ class SitePublishApi(remote.Service):
             request.content_type,
             request.data)
 
+        return GenericResponse()
+
     @endpoints.method(
         CommitRequest,
         GenericResponse,
         name='commit', path='commit')
     def commit(self, request):
-        ValidateUserDomain()
+        ValidateUserIsAuthorized()
         publish.commit_change(request.change_id)
+        return GenericResponse()
 
     @endpoints.method(
         AbortRequest,
         GenericResponse,
         name='abort', path='abort')
     def abort(self, request):
-        ValidateUserDomain()
+        ValidateUserIsAuthorized()
         publish.abort_change(request.change_id)
+        return GenericResponse()
 
 
 app = endpoints.api_server([SitePublishApi], restricted=False)

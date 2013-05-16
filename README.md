@@ -6,14 +6,6 @@ Google App Engine.  It is designed to be a part of a dynamic website that also
 hosts static content.
 
 
-## Acknowledgements
-
-This project includes Endpoints Proto Datastore.  The latest version of this
-library can be found here:
-
-   http://endpoints-proto-datastore.appspot.com/
-
-
 ## License
 
 Copyright 2013 Google Inc.

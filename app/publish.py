@@ -65,8 +65,10 @@ def create_content(change_id, url_path, content_type, data):
 
 
 def commit_change(change_id):
+    # TODO: implement commit
     logging.error('commit_change not implemented')
 
 
 def abort_change(change_id):
+    # TODO: implement abort
     logging.error('abort_change not implemented')

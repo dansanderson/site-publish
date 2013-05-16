@@ -4,7 +4,7 @@ import sys
 # The available commands.  Each of these has a module in this package with the
 # given name, containing a class with this name using an initial capital
 # letter.
-COMMANDS = ['publish']
+COMMANDS = ['demostart', 'publish']
 
 # The length of the longest command name, for columnar display.
 _COMMAND_NAME_MAX_WIDTH = max(len(c) for c in COMMANDS)
