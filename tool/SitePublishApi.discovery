@@ -1,6 +1,6 @@
 {
  "kind": "discovery#restDescription",
- "etag": "\"_eRzJ5rb6y2Sm1GT1st-3xOUuXg/b62SVh8ZdsB3uW7pgnIUH1Cx0TE\"",
+ "etag": "\"_eRzJ5rb6y2Sm1GT1st-3xOUuXg/gUfqSaR6ip_YWTJ0NdkWfPvni94\"",
  "discoveryVersion": "v1",
  "id": "sitepublish:v1",
  "name": "sitepublish",
@@ -73,16 +73,6 @@
   }
  },
  "schemas": {
-  "ServicesAbortRequest": {
-   "id": "ServicesAbortRequest",
-   "type": "object",
-   "properties": {
-    "change_id": {
-     "type": "string",
-     "format": "int64"
-    }
-   }
-  },
   "ServicesCommitRequest": {
    "id": "ServicesCommitRequest",
    "type": "object",
@@ -146,20 +136,6 @@
   }
  },
  "methods": {
-  "abort": {
-   "id": "sitepublish.abort",
-   "path": "abort",
-   "httpMethod": "POST",
-   "request": {
-    "$ref": "ServicesAbortRequest"
-   },
-   "response": {
-    "$ref": "ServicesGenericResponse"
-   },
-   "scopes": [
-    "https://www.googleapis.com/auth/userinfo.email"
-   ]
-  },
   "commit": {
    "id": "sitepublish.commit",
    "path": "commit",

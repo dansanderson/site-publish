@@ -1,4 +1,0 @@
-home: "localhost"
-port: 10081
-publishing_path: "/_/content/"
-use_ssl: false

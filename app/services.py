@@ -107,14 +107,5 @@ class SitePublishApi(remote.Service):
         publish.commit_change(request.change_id)
         return GenericResponse()
 
-    @endpoints.method(
-        AbortRequest,
-        GenericResponse,
-        name='abort', path='abort')
-    def abort(self, request):
-        ValidateUserIsAuthorized()
-        # TODO: implement abort
-        return GenericResponse()
-
 
 app = endpoints.api_server([SitePublishApi], restricted=False)
