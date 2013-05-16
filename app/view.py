@@ -23,6 +23,20 @@ class View(webapp2.RequestHandler):
             self.response.status = 404
 
 
+class ApplyTask(webapp2.RequestHandler):
+    def post(self):
+        change_id = self.request.params['change_id']
+
+        # TODO:
+        # 1) For each project_root, query Path for subpaths.
+        # 2) Compare existing subpaths with upload_paths.  The difference is
+        #     the list of paths to delete.
+        # 3) Update Paths and delete old Content objects, as
+        #     appropriate.  It's probably best to trigger new tasks to
+        #     handle these.
+
+
 app = webapp2.WSGIApplication(
-    [('/.*', View)],
+    [('/_sitepublish/apply', ApplyTask),
+     ('/.*', View)],
     debug=True)

@@ -6,8 +6,9 @@ from protorpc import remote
 import models
 import publish
 
-CLIENT_IDS = ['145889693104-t0nm6og9vt8qmrdkus1aecm7d45stcgr.apps.googleusercontent.com',
-    endpoints.API_EXPLORER_CLIENT_ID]
+CLIENT_IDS = ['145889693104-t0nm6og9vt8qmrdkus1aecm7d45stcgr.'
+              'apps.googleusercontent.com',
+              endpoints.API_EXPLORER_CLIENT_ID]
 CONTENT_DEVELOPERS = ['dan.sanderson@gmail.com']
 
 
@@ -32,10 +33,6 @@ class UploadRequest(messages.Message):
 
 
 class CommitRequest(messages.Message):
-    change_id = messages.IntegerField(1, required=True)
-
-
-class AbortRequest(messages.Message):
     change_id = messages.IntegerField(1, required=True)
 
 
@@ -116,7 +113,7 @@ class SitePublishApi(remote.Service):
         name='abort', path='abort')
     def abort(self, request):
         ValidateUserIsAuthorized()
-        publish.abort_change(request.change_id)
+        # TODO: implement abort
         return GenericResponse()
 
 
