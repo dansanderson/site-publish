@@ -33,6 +33,8 @@ def apply_delete_path(path, change_id):
     path_obj.last_applied_change_id = change_id
     path_obj.put()
 
+    logging.info('Applied delete for change_id=%r path=%r', change_id, path)
+
 
 @ndb.transactional
 def apply_update_path(path, change_id):
@@ -48,6 +50,8 @@ def apply_update_path(path, change_id):
     path_obj.is_deleted = False
     path_obj.last_applied_change_id = change_id
     path_obj.put()
+
+    logging.info('Applied update for change_id=%r path=%r', change_id, path)
 
 
 class ApplyTask(webapp2.RequestHandler):
@@ -72,7 +76,33 @@ class ApplyTask(webapp2.RequestHandler):
             apply_update_path(path_to_update, change_id)
 
 
+class AdminSignin(webapp2.RequestHandler):
+    def get(self):
+        self.response.out.write('''
+<html>
+  <head>
+    <title>Site Publish</title>
+<style>
+body {
+    font-family: Geneva, sans-serif;
+    color: #333;
+    margin: 0 3em;
+}
+</style>
+  </head>
+  <body>
+    <h1>Site Publish</h1>
+    <ul>
+      <li><a href="/_ah/api/explorer">API Explorer</a></li>
+      <li><a href="/_ah/api/discovery/v1/apis">API Discovery</a></li>
+    </ul>
+  </body>
+</html>
+        ''')
+
+
 app = webapp2.WSGIApplication(
-    [('/_sitepublish/apply', ApplyTask),
+    [('/_sitepublish/', AdminSignin),
+     ('/_sitepublish/apply', ApplyTask),
      ('/.*', View)],
     debug=True)

@@ -10,6 +10,26 @@ start-upload-commit design pattern described in the talk.  There is
 plenty of room for improvement and extension.  And possibly a few
 bugs.  Enjoy!
 
+To demonstrate publishing on a development server, start the server:
+
+    dev_appserver.py app
+  
+Then publish the included demo content:
+
+    ./sp publish content/*
+
+To use the client with a deployed app, generate a new discovery
+document with the app's hostname:
+
+    cd app
+    ~/google_appengine/endpointscfg.py gen_discovery_doc -o ../tool -f rest --hostname=site-publish.appspot.com services.SitePublishApi
+
+To use the API Explorer with your deployed app, you must be signed in to your site with your app administrator account.  To sign in, visit this URL, then sign in with the Google account you use to deploy the app:
+
+    https://YOUR-APP-ID.appspot.com/_sitepublish/
+
+Then visit the link shown to the API Explorer.
+
 
 ## License
 

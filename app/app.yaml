@@ -7,6 +7,9 @@ threadsafe: true
 handlers:
 - url: /_ah/spi/.*
   script: services.app
+- url: /_sitepublish/.*
+  login: admin
+  script: view.app
 - url: /.*
   script: view.app
 

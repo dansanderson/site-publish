@@ -42,14 +42,12 @@ def start_change(project_prefixes, upload_paths, current_user):
         project_prefixes=project_prefixes,
         created_by=current_user)
     change.put()
+    logging.info('Started change_id=%r', next_id)
     return change
 
 
 def create_content(change_id, url_path, content_type, data):
     """Store uploaded content.
-
-    This function uses a datastore transaction to create a Content entity for
-    uploaded content.
 
     Args:
       change_id: The ID of the change, as an int.
@@ -63,6 +61,7 @@ def create_content(change_id, url_path, content_type, data):
         content_type=content_type,
         data=data)
     content.put()
+    logging.info('Created Content for url_path=%r change_id=%r, data length=%d', url_path, change_id, len(data))
 
 
 @ndb.transactional
@@ -79,3 +78,4 @@ def commit_change(change_id):
     change.is_committed = True
     change.put()
     taskqueue.add(url='/_sitepublish/apply', params={'change_id': change_id})
+    logging.info('Committed change_id=%r', change_id)
