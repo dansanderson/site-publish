@@ -6,6 +6,7 @@
 # TODO: not-modified check
 # TODO: large upload support
 
+import base64
 import httplib2
 import mimetypes
 import os
@@ -214,12 +215,13 @@ Usage:
                 mime_type = 'application/octet-stream'
             with open(file_path) as fh:
                 data = fh.read()
+            encoded_data = base64.b64encode(data)
             request = service.upload(
                 body={
                     'change_id': change_id,
                     'url_path': url_path,
                     'content_type': mime_type,
-                    'data': data})
+                    'data': encoded_data})
             response = request.execute(http=http)
             del data
 

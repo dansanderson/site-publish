@@ -5,10 +5,10 @@ Site Publish is a simple file-based content publishing system that runs on
 Google App Engine.  It is designed to be a part of a dynamic website that also
 hosts static content.
 
-*Important, 2013-05-16:* This is only part of the implementation, with a known
-issue with the upload message format and missing code for the apply
-task.  I'll post the fix this shortly, I just wanted to get this into
-Github to accompany the talk.
+This is a basic implementation that demonstrates the
+start-upload-commit design pattern described in the talk.  There is
+plenty of room for improvement and extension.  And possibly a few
+bugs.  Enjoy!
 
 
 ## License

@@ -1,4 +1,6 @@
+import logging
 import webapp2
+from google.appengine.ext import ndb
 
 import models
 
@@ -23,17 +25,51 @@ class View(webapp2.RequestHandler):
             self.response.status = 404
 
 
+@ndb.transactional
+def apply_delete_path(path, change_id):
+    path_obj = models.Path.get_key(path).get()
+    path_obj.content_key.delete()
+    path_obj.is_deleted = True
+    path_obj.last_applied_change_id = change_id
+    path_obj.put()
+
+
+@ndb.transactional
+def apply_update_path(path, change_id):
+    path_obj = models.Path.get_key(path).get()
+
+    if path_obj is not None and not path_obj.is_deleted:
+        path_obj.content_key.delete()
+
+    if path_obj is None:
+        path_obj = models.Path(key=models.Path.get_key(path))
+
+    path_obj.content_key = models.Content.get_key(path, change_id)
+    path_obj.is_deleted = False
+    path_obj.last_applied_change_id = change_id
+    path_obj.put()
+
+
 class ApplyTask(webapp2.RequestHandler):
     def post(self):
-        change_id = self.request.params['change_id']
+        change_id = int(self.request.params['change_id'])
+        change = models.Change.get_key(change_id).get()
 
-        # TODO:
-        # 1) For each project_root, query Path for subpaths.
-        # 2) Compare existing subpaths with upload_paths.  The difference is
-        #     the list of paths to delete.
-        # 3) Update Paths and delete old Content objects, as
-        #     appropriate.  It's probably best to trigger new tasks to
-        #     handle these.
+        existing_paths = set()
+        for project_root in change.project_prefixes:
+            query = models.Path.query()
+            existing_paths.add(list(query.iter(keys_only=True)))
+        paths_to_delete = existing_paths - set(change.upload_paths)
+
+        # To improve the maximum change size, defer these steps to
+        # multiple sub-tasks.  As written, this is limited by the 10
+        # minute task size.
+
+        for path_to_delete in paths_to_delete:
+            apply_delete_path(path_to_delete, change_id)
+
+        for path_to_update in change.upload_paths:
+            apply_update_path(path_to_update, change_id)
 
 
 app = webapp2.WSGIApplication(

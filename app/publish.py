@@ -57,15 +57,6 @@ def create_content(change_id, url_path, content_type, data):
       content_type: The MIME content type for the data.
       data: The data of the content.
     """
-    # TODO: Better error handling.
-
-    change_key = models.Change.get_key(change_id)
-    change = change_key.get()
-    if change is None:
-        raise Exception('Invalid change ID')
-    if change.is_committed or change.is_aborted:
-        raise Exception('Cannot upload to a finished change.')
-
     content_key = models.Content.get_key(url_path, change_id)
     content = models.Content(
         key=content_key,

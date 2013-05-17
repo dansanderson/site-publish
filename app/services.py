@@ -70,23 +70,16 @@ class SitePublishApi(remote.Service):
         GenericResponse,
         name='upload', path='upload')
     def upload(self, request):
-        logging.error('DEBUG: GOT HERE 1')
         ValidateUserIsAuthorized()
         change_key = models.Change.get_key(request.change_id)
         change = change_key.get()
         if change is None:
-            logging.error('Bad upload request: Invalid change ID: %r',
-                          request.change_id)
             raise endpoints.BadRequestException(
                 'Invalid change ID.')
         if request.url_path not in change.upload_paths:
-            logging.error('Bad upload request: Unexpected upload for path: %r',
-                          request.url_path)
             raise endpoints.BadRequestException(
                 'Unexpected upload for path %s.' % request.url_path)
         if len(request.data) > 900 * 1024:
-            logging.error('Bad upload request: File too large: %r',
-                          request.url_path)
             raise endpoints.BadRequestException(
                 'Uploaded data cannot exceed 900 kilobytes.')
 
